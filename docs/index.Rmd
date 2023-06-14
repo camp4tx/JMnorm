@@ -33,13 +33,13 @@ library(dynamicTreeCut)
 
 Load JMnorm source code & setup working directory.
 
-!Change the file path of "JMnorm.script.R" and working directory path.
+!!! Change the file path of "JMnorm.script.R" and working directory path.
 ```{r}
 # Source the JMnorm script 
-source('/Users/guanjuexiang/Documents/projects/git/JMnorm.beta/bin/JMnorm_core/JMnorm.script.R')
+source('/Users/guanjuexiang/Documents/projects/git/JMnorm/bin/JMnorm_core/JMnorm.script.R')
 
 # Set the working directory
-setwd('/Users/guanjuexiang/Downloads/test_JMnorm')
+setwd('/Users/guanjuexiang/Documents/projects/git/JMnorm/test_data/')
 ```
 
 Set parameters
