@@ -48,6 +48,9 @@ conda create -n jmnorm r r-readr r-dynamicTreeCut r-pheatmap
 # activate the environment
 conda activate jmnorm
 
+# git clone the JMnorm GitHub repository
+git clone https://github.com/camp4tx/JMnorm.git
+
 # start R
 # source the script in R
 # source("/path_to_JMnorm_folder/bin/JMnorm_core/JMnorm.script.R")
