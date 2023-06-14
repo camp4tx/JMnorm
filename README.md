@@ -95,7 +95,7 @@ cCREids	ATAC	H3K27ac	H3K27me3	H3K36me3	H3K4me1	H3K4me3	H3K9me3
 
 ## Running JMnorm
 Detailed instructions on using JMnorm can be found in the [Getting started with JMnorm](https://camp4tx.github.io/JMnorm/) R markdown file.
-The testing signal matrices can be found in this link: https://camp4tx.github.io/JMnorm/
+The testing signal matrices can be found in this link: https://github.com/camp4tx/JMnorm/tree/main/test_data
 
 
 
