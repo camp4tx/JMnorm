@@ -198,7 +198,7 @@ print(paste0('Running time on a MacBookPro 2021 M1Pro Chip 16GB REM: ', round((e
 ***
 ##### Reference
 *** 
-Guanjue Xiang, Yuchun Guo, David Bumcrot. JMnorm: a novel approach for Jointly Multi-feature normalization of epigenomic data across cell types and species (2023)
+Guanjue Xiang, Yuchun Guo, David Bumcrot, Alla Sigova. JMnorm: a novel approach for Jointly Multi-feature normalization of epigenomic data across cell types and species (2023)
 
 ***
 
