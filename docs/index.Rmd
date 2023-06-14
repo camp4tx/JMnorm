@@ -1,14 +1,14 @@
 ---
 title: "Getting started with JMnorm"
-date: "2023-03-31"
+date: "2023-06-14"
 output:
   html_document: default
   pdf_document: default
   word_document: default
 ---
-### JMnorm: a novel approach for Jointly Multi-feature normalization of epigenomic data across cell types and species
+### JMnorm: a novel Joint Multi-feature normalization method for integrative and comparative epigenomics
 ***
-##### Guanjue Xiang
+##### Guanjue Xiang, Yuchun Guo, David Bumcrot, Alla Sigova
 ##### CAMP4 Therapeutics Corp., Cambridge, MA, USA
 
 ***
@@ -198,7 +198,7 @@ print(paste0('Running time on a MacBookPro 2021 M1Pro Chip 16GB REM: ', round((e
 ***
 ##### Reference
 *** 
-Guanjue Xiang, Yuchun Guo, David Bumcrot, Alla Sigova. JMnorm: a novel approach for Jointly Multi-feature normalization of epigenomic data across cell types and species (2023)
+Guanjue Xiang, Yuchun Guo, David Bumcrot, Alla Sigova. JMnorm: a novel Joint Multi-feature normalization method for integrative and comparative epigenomics (2023)
 
 ***
 
