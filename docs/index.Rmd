@@ -51,7 +51,7 @@ feature_list = c("ATAC", "H3K27ac", "H3K27me3", "H3K36me3", "H3K4me1", "H3K4me3"
 add_sn = 1
 
 # input file names
-# The testing signal matrices can be found in this link: https://github.com/guanjue/JMnorm/tree/main/docs
+# The testing signal matrices can be found in this link: https://github.com/camp4tx/JMnorm/tree/main/docs
 refer_sigmat_file = 'ref.raw_sigmat.txt'
 target_sigmat_file = 'TCD8.raw_sigmat.txt'
 after_JMnorm_output_target_sigmat_file = 'TCD8.JMnorm_sigmat.txt'
