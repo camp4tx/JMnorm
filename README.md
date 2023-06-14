@@ -40,7 +40,7 @@ An overview of the four key steps in the JMnorm normalization procedure. (A) Ste
 
 ## Requirements
 R version 4.0.0 or later
-Packages: readr, pheatmap
+Packages: readr, pheatmap, dynamicTreeCut
 
 ## Installation 
 ```
