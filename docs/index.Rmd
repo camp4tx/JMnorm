@@ -1,0 +1,211 @@
+---
+title: "Getting started with JMnorm"
+date: "2023-03-31"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+### JMnorm: a novel approach for Jointly Multi-feature normalization of epigenomic data across cell types and species
+***
+##### Guanjue Xiang
+##### CAMP4 Therapeutics Corp., Cambridge, MA, USA
+
+***
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Description: This R Markdown file demonstrates the use of JMnorm to normalize the target signal matrix "TCD8.raw_sigmat.txt" against the reference signal matrix "ref.raw_sigmat.txt". The input matrices, "TCD8.raw_sigmat.txt" and "ref.raw_sigmat.txt", should be formatted as N-by-(M+1) matrices, where N represents the number of cCREs, and M represents the number of chromatin features. The first column of each matrix contains the cCRE IDs. The signal values for each chromatin feature in the cCREs are expected to be non-negative and in linear scale.
+
+***
+
+##### run JMnorm
+***
+Load Libraries
+```{r}
+start.time <- Sys.time()
+library(readr)
+library(pheatmap)
+library(dynamicTreeCut)
+```
+
+Load JMnorm source code & setup working directory.
+
+!Change the file path of "JMnorm.script.R" and working directory path.
+```{r}
+# Source the JMnorm script 
+source('/Users/guanjuexiang/Documents/projects/git/JMnorm.beta/bin/JMnorm_core/JMnorm.script.R')
+
+# Set the working directory
+setwd('/Users/guanjuexiang/Downloads/test_JMnorm')
+```
+
+Set parameters
+```{r}
+# get feature list
+feature_list = c("ATAC", "H3K27ac", "H3K27me3", "H3K36me3", "H3K4me1", "H3K4me3", "H3K9me3")
+
+# added 1 to avoid 0 in log transformation
+add_sn = 1
+
+# input file names
+# The testing signal matrices can be found in this link: https://github.com/guanjue/JMnorm/tree/main/docs
+refer_sigmat_file = 'ref.raw_sigmat.txt'
+target_sigmat_file = 'TCD8.raw_sigmat.txt'
+after_JMnorm_output_target_sigmat_file = 'TCD8.JMnorm_sigmat.txt'
+```
+
+Read reference signal matrix
+```{r}
+# read refe_ave_sigmat
+file_ref = as.data.frame(read_table(refer_sigmat_file, col_names = T))
+file_ref_sig0 = file_ref[,-1]
+```
+
+Normalize signal to noise ratio (SNR) of reference signal matrix
+```{r}
+# normalize signal to noise ratio (SNR) across features (Optional)
+file_ref_sig = normalize_snr(file_ref_sig0)
+# if user decided to NOT normalize SNR across different features, then use the following command instead
+# file_ref_sig = file_ref_sig0
+
+# log2 transformation
+file_ref_sig_log2 = log2(file_ref_sig+add_sn)
+```
+
+Determine number of clusters in reference signal matrix
+```{r}
+# Determine the K value for JMnorm based on reference signal matrix
+K = determineK(file_ref_sig_log2, sample_size=20000)
+```
+
+Read target signal matrix
+```{r}
+# read target signal matrix
+target_ct = as.data.frame(read_table(target_sigmat_file, col_names = T))
+
+# add noise to avoid many 0s
+target_ct_sig0 = target_ct[,-1]+matrix(runif(prod(dim(target_ct)), min = -0.00001, max = 0.0001), nrow = dim(target_ct)[1])
+
+# avoid negative values
+target_ct_sig0 = target_ct_sig0-min(target_ct_sig0)
+```
+
+Normalize signal to noise ratio (SNR) of target signal matrix
+```{r}
+# normalize signal to noise ratio (SNR) across features
+target_ct_sig = normalize_snr(target_ct_sig0)
+
+# log2 transformation
+target_ct_sig_log2 = log2(target_ct_sig+add_sn)
+```
+
+Use JMnorm to normalize target signal matrix against reference signal matrix
+```{r}
+# JMnorm
+target_ct_sig_JMnorm = JMnorm(target_ct_sig_log2, file_ref_sig_log2, K)
+```
+
+##### Write JMnorm normalized signal matrix
+***
+```{r}
+# add colnames
+colnames(file_ref_sig_log2) = feature_list
+
+# correlation between features in reference cell-type
+file_ref_sig_log2_cor = cor(file_ref_sig_log2)
+
+# add colnames
+colnames(target_ct_sig_JMnorm) = feature_list
+
+# convert JMnorm normalized target signal matrix back to linear scale
+target_ct_sig_JMnorm_linear = 2^(target_ct_sig_JMnorm)-add_sn
+
+# write output JMnorm normalized target signal matrix
+output_mat = cbind(target_ct[,1], round(target_ct_sig_JMnorm_linear, 3))
+colnames(output_mat) = colnames(target_ct)
+write.table(output_mat, after_JMnorm_output_target_sigmat_file, quote=F, col.names=T, row.names = F, sep='\t')
+```
+
+
+##### Plot cross-feature correlation matrix heatmap
+*** 
+Get cross-feature correlation matrix
+```{r}
+# correlation between features in target cell-type before JMnorm
+target_ct_sig_cor = cor(target_ct_sig_log2)
+
+# correlation between features in target cell-type after JMnorm
+target_ct_sig_JMnorm_cor = cor(target_ct_sig_JMnorm)
+
+# calculate the R2 between the correlation matrix of target cell-type and reference cell-type
+r2_after = r2(as.numeric(target_ct_sig_JMnorm_cor), as.numeric(file_ref_sig_log2_cor))
+
+r2_before = r2(as.numeric(target_ct_sig_cor), as.numeric(file_ref_sig_log2_cor))
+```
+
+```{r}
+print(paste0('R2 of correlation matrix between target reference before JMnorm: ', r2_before))
+print(paste0('R2 of correlation matrix between target reference after JMnorm: ', r2_after))
+```
+
+
+(1) plot the correlation matrix of target cell-type AFTER JMnorm
+```{r fig1, fig.width=5., fig.height=6}
+par(mfrow=c(1,2))
+# plot the correlation matrix of target cell-type after JMnorm
+breaksList = seq(-1,1, by = 0.001)
+my_colorbar=colorRampPalette(c('blue', 'white', 'red'))(n = length(breaksList))
+pheatmap(target_ct_sig_JMnorm_cor, color=my_colorbar, breaks = breaksList, cluster_rows = F, cluster_cols = F, show_rownames = F, show_colnames = T, cex=1.2, main='Target Corr matrix (After JMnorm)')
+```
+
+(2) plot the correlation matrix of target cell-type BEFORE JMnorm
+```{r fig2, fig.width=5., fig.height=6}
+# plot the correlation matrix of target cell-type before JMnorm
+colnames(target_ct_sig_cor) = feature_list
+pheatmap(target_ct_sig_cor, color=my_colorbar, breaks = breaksList, cluster_rows = F, cluster_cols = F, show_rownames = F, show_colnames = T, cex=1.2, main='Target Corr matrix (Before JMnorm)')
+```
+
+(3) plot the correlation matrix of reference
+```{r fig3, fig.width=5., fig.height=6}
+breaksList = seq(-1,1, by = 0.001)
+my_colorbar=colorRampPalette(c('blue', 'white', 'red'))(n = length(breaksList))
+# plot the correlation matrix of reference cell-type
+pheatmap(file_ref_sig_log2_cor, color=my_colorbar, breaks = breaksList, cluster_rows = F, cluster_cols = F, show_rownames = F, show_colnames = T, cex=1.2, main='Reference Corr matrix')
+```
+
+(4) plot scatterplots of correlations between reference and target (Before & After JMnorm)
+```{r fig4, fig.width=9, fig.height=5}
+par(mfrow=c(1,2))
+
+# plot the correlation matrix of reference cell-type
+plot(as.numeric(file_ref_sig_log2_cor), as.numeric(target_ct_sig_JMnorm_cor), xlab='Reference', ylab='Target', xlim=c(-0.5,1), ylim=c(-0.5,1), main='After JMnorm', cex.axis=1.5)
+abline(0,1)
+
+plot(as.numeric(file_ref_sig_log2_cor), as.numeric(target_ct_sig_cor), xlab='Reference', ylab='Target', xlim=c(-0.5,1), ylim=c(-0.5,1), main='Before JMnorm', cex.axis=1.5)
+abline(0,1)
+end.time <- Sys.time()
+```
+
+
+```{r}
+print(paste0('Running time on a MacBookPro 2021 M1Pro Chip 16GB REM: ', round((end.time - start.time), 3)))
+```
+
+
+***
+##### Reference
+*** 
+Guanjue Xiang, Yuchun Guo, David Bumcrot. JMnorm: a novel approach for Jointly Multi-feature normalization of epigenomic data across cell types and species (2023)
+
+***
+
+
+
+
+
+
+
+
