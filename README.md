@@ -3,7 +3,7 @@
 ## A novel Joint Multi-feature normalization method for integrative and comparative epigenomics
 Guanjue Xiang, Yuchun Guo, David Bumcrot, Alla Sigova. at CAMP4 Therapeutics Corp., Cambridge, MA, USA
 
-## The source code wiil be release by the end of April
+## The source code wiil be release by the end of June
 
 ##
 **[(1) Summary](#Summary)**<br>
