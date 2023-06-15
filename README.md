@@ -29,7 +29,7 @@ Guanjue Xiang, Yuchun Guo, David Bumcrot, Alla Sigova. at CAMP4 Therapeutics Cor
 Combinatorial patterns of epigenetic features reflect transcriptional states. Existing normalization approaches may distort relationships between functionally correlated features by normalizing each feature independently. We present JMnorm, a novel approach that normalizes multiple epigenetic features simultaneously by leveraging information from correlated features. We show that JMnorm-normalized data preserve cross-feature correlations and combinatorial patterns of epigenetic features across cell types, improve cross-cell type gene expression prediction models, consistency between biological replicates, and detection of epigenetic changes upon perturbations. These findings suggest that JMnorm minimizes technical noise while preserving biologically relevant relationships between features. 
 
 ## Citation
-Guanjue Xiang, Yuchun Guo, David Bumcrot, Alla Sigova. a novel Joint Multi-feature normalization method for integrative and comparative epigenomics. (2023-06) [doi: https://doi.org/10.1101/2023.06.14.545004](https://www.biorxiv.org/content/10.1101/2023.06.14.545004v1.article-info)
+Guanjue Xiang, Yuchun Guo, David Bumcrot, Alla Sigova. a novel Joint Multi-feature normalization method for integrative and comparative epigenomics. (2023-06) [doi: https://doi.org/10.1101/2023.06.14.545004](https://www.biorxiv.org/content/10.1101/2023.06.14.545004v1)
 
 
 ## JMnorm Overview
