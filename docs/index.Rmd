@@ -2,8 +2,8 @@
 title: "Getting started with JMnorm"
 date: "2023-06-14"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
   word_document: default
 ---
 ### JMnorm: a novel Joint Multi-feature normalization method for integrative and comparative epigenomics
@@ -73,6 +73,25 @@ file_ref_sig = normalize_snr(file_ref_sig0)
 
 # log2 transformation
 file_ref_sig_log2 = log2(file_ref_sig+add_sn)
+```
+
+Or user can use QTnorm2part for cross feature normalization: separately for peak regions and background regions (Schreiber, Jacob, et al. "The ENCODE Imputation Challenge: a critical assessment of methods for cross-cell type imputation of epigenomic profiles." Genome Biology 24.1 (2023): 1-22.)
+```{r}
+# Source the QTnorm2part script
+# source('/Users/guanjuexiang/Documents/projects/git/JMnorm/bin/QTnorm2parts.R')
+# select the first column of the reference matrix as the reference signal for cross feature normalization
+# file_ref_sig0_refcol = file_ref_sig0[,1]
+# QTnorm_2part normalize each feature against the file_ref_sig0_refcol
+# file_ref_sig_QTnorm2part = file_ref_sig0
+# for (j in 1:dim(file_ref_sig0)[2]){
+  # QTnorm_2part
+  # file_ref_sig_QTnorm2part[,j] = QTnorm_2part(file_ref_sig_QTnorm2part[,j], file_ref_sig0_refcol, 0.1)
+# }
+# if user decided to NOT normalize across different features by QTnorm2part, then use the following command instead
+# file_ref_sig_QTnorm2part = file_ref_sig0
+
+# log2 transformation
+#file_ref_sig_log2 = log2(file_ref_sig_QTnorm2part+add_sn)
 ```
 
 Determine number of clusters in reference signal matrix
